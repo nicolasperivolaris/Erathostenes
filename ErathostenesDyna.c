@@ -26,21 +26,10 @@ typedef struct TListPrimes {
     int cPrimes;
 }ListPrimes;
 
-void InitializeTListPrimes(ListPrimes *list){
-	
-}
-
-void Erathostenes(ListPrimes *list){
-	
-}
-
-void ShowPrimes(ListPrimes *list){
-	
-}
-
-void DestroyTListPrimes(ListPrimes *list){
-	
-}
+void InitializeTListPrimes(ListPrimes *list);
+void Erathostenes(ListPrimes *list);
+void ShowPrimes(ListPrimes *list);
+void DestroyTListPrimes(ListPrimes *list);
 
 int main(int argc, char* argv[]) {
     clock_t ct1, ct2;
@@ -63,5 +52,25 @@ typedef unsigned int uint32;
 #define unsetbitarray(pba, i) (pba[i >> 5] &= ~(0x00000001 << (i & 0x0000001F)))
 #define issetbitarray(pba, i) (pba[i >> 5] & (0x00000001 << (i & 0x0000001F)))
 
-/*  TODO ... */
+void InitializeTListPrimes(ListPrimes *list){
+	list->cPrimes = 0;
+	list->pPrimes = NULL;
+	list->maximum = 0;
+}
 
+void Erathostenes(ListPrimes *list){
+	
+}
+
+void ShowPrimes(ListPrimes *list){
+	printf("Il y a %d nombres premiers inférieurs à %d", list->cPrimes, list->maximum);
+	for(int i=0; i<list->maximum; i++){
+		printf("Nombre premier n %d: %d\n",i, list->pPrimes[i]);
+	}
+	Stop();
+}
+
+void DestroyTListPrimes(ListPrimes *list){
+	free(list->pPrimes);
+	free(list);
+}
