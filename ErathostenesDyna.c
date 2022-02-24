@@ -19,6 +19,7 @@ typedef unsigned char bool;
 #define true 1
 
 #define MAX 2147483647       /* (2^31-1) */
+#define MAX_UINT32 4294967295      
 
 typedef struct TListPrimes {
     int maximum;
@@ -33,7 +34,7 @@ void DestroyTListPrimes(ListPrimes *list);
 
 int main(int argc, char* argv[]) {
     clock_t ct1, ct2;
-    struct TListPrimes listPrimes;
+	ListPrimes listPrimes;
     do {
         InitializeTListPrimes(&listPrimes);
         listPrimes.maximum = ReadIntLimited("\nVotre naturel maximum ? ", 0, MAX);
@@ -58,8 +59,39 @@ void InitializeTListPrimes(ListPrimes *list){
 	list->maximum = 0;
 }
 
+int* toIntArray(uint32* tab, int size){
+	int* result = malloc(sizeof(int)*size);
+	int j = 0;
+	for(int i=0; i<size; i++){
+		if(issetbitarray(tab, i)){
+			result[j] = i;
+			j++;
+		}
+	}
+	return result;
+}
+
+void fillArrayWith(uint32 *tab, int size, int value){
+	for(int i = 0; i<size; i++){
+		tab[i]=value;
+	}
+}
+
 void Erathostenes(ListPrimes *list){
+	int limit = sqrt(list->maximum);
+	uint32 tab[limit/32];
+	fillArrayWith(tab, limit/32, MAX); //fill array with 1 bits
+	unsetbitarray(tab, 0);
+	unsetbitarray(tab, 1);
+	for(int i=2; i<limit; i++){//read the tab until limit
+		if(issetbitarray(tab, i)){//check next prime
+			for(int j = i*i; j<limit; j+=i){//delete multiples
+				unsetbitarray(tab,j);
+			} 
+		}
+	}
 	
+	list->pPrimes = toIntArray(tab, limit);
 }
 
 void ShowPrimes(ListPrimes *list){
