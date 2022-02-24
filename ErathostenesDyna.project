@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Project Name="ErathostenesDyna" Version="11000" InternalType="Console">
+  <VirtualDirectory Name="Erathostenes">
+    <File Name="tags"/>
+    <File Name="Makefile"/>
+    <File Name=".gitignore"/>
+  </VirtualDirectory>
   <Description/>
   <Dependencies/>
   <Settings Type="Executable">
@@ -93,6 +98,8 @@
     </Configuration>
   </Settings>
   <VirtualDirectory Name="src">
+    <File Name="inout.h"/>
+    <File Name="inout.c"/>
     <File Name="ErathostenesDyna.c"/>
   </VirtualDirectory>
 </CodeLite_Project>

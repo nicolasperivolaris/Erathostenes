@@ -20,11 +20,27 @@ typedef unsigned char bool;
 
 #define MAX 2147483647       /* (2^31-1) */
 
-struct TListPrimes {
+typedef struct TListPrimes {
     int maximum;
     int* pPrimes;
     int cPrimes;
-}TListPrimes;
+}ListPrimes;
+
+void InitializeTListPrimes(ListPrimes *list){
+	
+}
+
+void Erathostenes(ListPrimes *list){
+	
+}
+
+void ShowPrimes(ListPrimes *list){
+	
+}
+
+void DestroyTListPrimes(ListPrimes *list){
+	
+}
 
 int main(int argc, char* argv[]) {
     clock_t ct1, ct2;
@@ -36,8 +52,7 @@ int main(int argc, char* argv[]) {
         Erathostenes(&listPrimes);
         ct2 = clock();
         printf("Duree calculs : %.2f\n", (double)(ct2 - ct1) / CLOCKS_PER_SEC);
-        ShowPrimes2(&listPrimes);
-        /*ShowPrimes(&listPrimes);*/
+        ShowPrimes(&listPrimes);
         DestroyTListPrimes(&listPrimes);
     } while(!Stop());
     return EXIT_SUCCESS;
