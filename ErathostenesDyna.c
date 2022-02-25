@@ -37,12 +37,12 @@ int main(int argc, char* argv[]) {
 	ListPrimes listPrimes;
     do {
         InitializeTListPrimes(&listPrimes);
-        listPrimes.maximum = 20;//ReadIntLimited("\nVotre naturel maximum ? ", 0, MAX);
+        listPrimes.maximum = ReadIntLimited("\nVotre naturel maximum ? ", 0, MAX);
         ct1 = clock();
         Erathostenes(&listPrimes);
         ct2 = clock();
         printf("Duree calculs : %.2f\n", (double)(ct2 - ct1) / CLOCKS_PER_SEC);
-        ShowPrimes(&listPrimes);
+        //ShowPrimes(&listPrimes);
         DestroyTListPrimes(&listPrimes);
     } while(!Stop());
     return EXIT_SUCCESS;
@@ -60,9 +60,11 @@ void InitializeTListPrimes(ListPrimes *list){
 }
 
 void toIntArray(uint32* tab, ListPrimes *list){	
-	int* result = malloc(sizeof(int)*list->cPrimes);
+	uint32 size = sizeof(int)*list->cPrimes;
+	int* result = malloc(size);
 	int j = 0;
-	for(int i=0; (j<list->cPrimes) | (i<list->maximum); i++){
+	result[j++] = 2;
+	for(int i=3; (j<list->cPrimes) && (i<list->maximum); i+= 2){
 		if(!issetbitarray(tab, i)){ 
 			result[j] = i;
 			j++;
@@ -78,22 +80,30 @@ void fillArrayWith(uint32 *tab, int size, int value){
 }
 
 void Erathostenes(ListPrimes *list){
-	int limit = (list->maximum-1)/32 +1;
-	uint32 *tab = (uint32*)calloc(limit, sizeof(uint32));
+	long nbByte = (MAX-1)/8+1;
+	uint32 *tab = malloc(nbByte);
 	//if prime -> 0, if not -> 1
-	//fillArrayWith(tab, limit, 0); //fill array with 0 bits
 	setbitarray(tab, 0); 
 	setbitarray(tab, 1);
-	uint32 notPrime = 0;
-	for(int i=2; i*i<=list->maximum; i++){//read the tab until limit
+	//unsigned long int notPrime = 2;
+	for(unsigned long int i=3; i*i<=list->maximum; i+=2){//read the tab until limit
 		if(!issetbitarray(tab, i)){//if not already checked
-			for(int j = i*i; j<list->maximum; j+=i){//uncheck multiples
-				setbitarray(tab,j);
-				notPrime++;
-			} 
+			for(unsigned long int j = i*i; j<=list->maximum; j+=2*i){//uncheck multiples
+				//if(!issetbitarray(tab, j)){
+					setbitarray(tab,j);
+					//notPrime++;
+				//}
+			}
+		} 
+	}
+	list->cPrimes++;
+	for(unsigned long int i = 3; i<=list->maximum; i+=2){
+		if(!issetbitarray(tab, i)){
+			list->cPrimes++;
 		}
 	}
-	list->cPrimes = list->maximum - notPrime;
+	
+	//list->cPrimes = list->maximum - notPrime;
 	toIntArray(tab, list);
 }
 
