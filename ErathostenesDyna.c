@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
         Erathostenes(&listPrimes);
         ct2 = clock();
         printf("Duree calculs : %.2f\n", (double)(ct2 - ct1) / CLOCKS_PER_SEC);
-        /*ShowPrimes(&listPrimes);*/
+        ShowPrimes(&listPrimes);
         DestroyTListPrimes(&listPrimes);
     } while(!Stop());
     return EXIT_SUCCESS;
@@ -60,18 +60,22 @@ void InitializeTListPrimes(ListPrimes *list){
 	list->maximum = 0;
 }
 
+/*
+ * Take the bits array to make the int array with the primes
+ * */
 void toIntArray(uint32* tab, ListPrimes *list){	
 	uint32 nbByte = sizeof(int)*list->cPrimes;
 	int* result = malloc(nbByte);
 	int i, j = 0;
 	
 	result[j++] = 2;
-	for(i=3; (j<list->cPrimes) && (i<list->maximum); i+= 2){
+	for(i=3; (j<list->cPrimes) && (i<=list->maximum); i+= 2){
 		if(!issetbitarray(tab, i)){ 
 			result[j] = i;
 			j++;
 		}
 	}
+	
 	list->pPrimes = result;
 }
 
@@ -84,7 +88,7 @@ void fillArrayWith(uint32 *tab, int size, int value){
 
 void Erathostenes(ListPrimes *list){
 	ulong64 i;
-	long nbInt = (list->maximum-1)/sizeof(uint32)+1;
+	long nbInt = (list->maximum-1)/(sizeof(uint32)*8)+1;
 	uint32 *tab = calloc(nbInt, sizeof(uint32));
 	/*if prime -> 0, if not -> 1*/
 	setbitarray(tab, 0); 
