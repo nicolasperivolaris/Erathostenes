@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
         Erathostenes(&listPrimes);
         ct2 = clock();
         printf("Duree calculs : %.2f\n", (double)(ct2 - ct1) / CLOCKS_PER_SEC);
-        /*ShowPrimes(&listPrimes);*/
+		ShowPrimes(&listPrimes);
         DestroyTListPrimes(&listPrimes);
     } while(!Stop());
     return EXIT_SUCCESS;
@@ -91,7 +91,7 @@ void Erathostenes(ListPrimes *list){
 		if(!issetbitarray(tab, i)){/*if not already to 1 (so it's a prime)*/
 			ulong64 j;
 			for(j = i*i; j<=list->maximum; j+=2*i){/*start at i*i because all before that are already checked*/
-				if(!issetbitarray(tab, j)){
+				if(!issetbitarray(tab, j)){/*don't change twice the same number*/
 					setbitarray(tab,j);  
 					notPrimeCount++;
 				}
@@ -100,14 +100,15 @@ void Erathostenes(ListPrimes *list){
 	}
 	list->cPrimes++;
 	
-	list->cPrimes = list->maximum - (list->maximum/2 + notPrimeCount);
+	/*numberOfPrime = maximum - evenNumbers - notPrimes*/
+	list->cPrimes = list->maximum - (list->maximum/2 + notPrimeCount); 
 	toIntArray(tab, list);
 }
 
 void ShowPrimes(ListPrimes *list){
 	int i;
 	printf("Il y a %d nombres premiers inferieurs a %d\n", list->cPrimes, list->maximum);	for(i=0; i<list->cPrimes; i++){
-		printf("Nombre premier n%d: %d\n",i, list->pPrimes[i]);
+		printf("Nombre premier n%6d: %12d\n",i+1, list->pPrimes[i]);
 	}
 	Stop();
 }
