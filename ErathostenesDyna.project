@@ -7,10 +7,14 @@
   </VirtualDirectory>
   <Description/>
   <Dependencies/>
+  <VirtualDirectory Name="src">
+    <File Name="ErathostenesDyna.c"/>
+  </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
-      <Compiler Options="" C_Options="" Assembler="">
+      <Compiler Options="" C_Options="-std=c90; -pedantic-errors;-Wall" Assembler="">
         <IncludePath Value="."/>
+        <IncludePath Value="../InOut/src"/>
       </Compiler>
       <Linker Options="">
         <LibraryPath Value="."/>
@@ -21,7 +25,10 @@
       <Compiler Options="-g;-O0;-Wall" C_Options="-g;-O0;-Wall" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
       </Compiler>
-      <Linker Options="" Required="yes"/>
+      <Linker Options="" Required="yes">
+        <LibraryPath Value="../InOut/Debug"/>
+        <Library Value="InOut"/>
+      </Linker>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(ProjectName)" IntermediateDirectory="" Command="$(WorkspacePath)/build-$(WorkspaceConfiguration)/bin/$(OutputFile)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(WorkspacePath)/build-$(WorkspaceConfiguration)/lib" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
       <BuildSystem Name="CodeLite Makefile Generator"/>
@@ -97,9 +104,4 @@
       </Completion>
     </Configuration>
   </Settings>
-  <VirtualDirectory Name="src">
-    <File Name="inout.h"/>
-    <File Name="inout.c"/>
-    <File Name="ErathostenesDyna.c"/>
-  </VirtualDirectory>
 </CodeLite_Project>

@@ -42,13 +42,14 @@ int main(int argc, char* argv[]) {
         Erathostenes(&listPrimes);
         ct2 = clock();
         printf("Duree calculs : %.2f\n", (double)(ct2 - ct1) / CLOCKS_PER_SEC);
-        //ShowPrimes(&listPrimes);
+        /*ShowPrimes(&listPrimes);*/
         DestroyTListPrimes(&listPrimes);
     } while(!Stop());
     return EXIT_SUCCESS;
 }
 
 typedef unsigned int uint32;
+typedef unsigned long int ulong64;
 #define setbitarray(pba, i) (pba[i >> 5] |= (0x00000001 << (i & 0x0000001F)))
 #define unsetbitarray(pba, i) (pba[i >> 5] &= ~(0x00000001 << (i & 0x0000001F)))
 #define issetbitarray(pba, i) (pba[i >> 5] & (0x00000001 << (i & 0x0000001F)))
@@ -60,11 +61,12 @@ void InitializeTListPrimes(ListPrimes *list){
 }
 
 void toIntArray(uint32* tab, ListPrimes *list){	
-	uint32 size = sizeof(int)*list->cPrimes;
-	int* result = malloc(size);
-	int j = 0;
+	uint32 nbByte = sizeof(int)*list->cPrimes;
+	int* result = malloc(nbByte);
+	int i, j = 0;
+	
 	result[j++] = 2;
-	for(int i=3; (j<list->cPrimes) && (i<list->maximum); i+= 2){
+	for(i=3; (j<list->cPrimes) && (i<list->maximum); i+= 2){
 		if(!issetbitarray(tab, i)){ 
 			result[j] = i;
 			j++;
@@ -74,42 +76,41 @@ void toIntArray(uint32* tab, ListPrimes *list){
 }
 
 void fillArrayWith(uint32 *tab, int size, int value){
-	for(int i = 0; i<size; i++){
+	int i;
+	for(i = 0; i<size; i++){
 		tab[i]=value;
 	}
 }
 
 void Erathostenes(ListPrimes *list){
-	long nbByte = (MAX-1)/8+1;
-	uint32 *tab = malloc(nbByte);
-	//if prime -> 0, if not -> 1
+	ulong64 i;
+	long nbInt = (list->maximum-1)/sizeof(uint32)+1;
+	uint32 *tab = calloc(nbInt, sizeof(uint32));
+	/*if prime -> 0, if not -> 1*/
 	setbitarray(tab, 0); 
 	setbitarray(tab, 1);
-	//unsigned long int notPrime = 2;
-	for(unsigned long int i=3; i*i<=list->maximum; i+=2){//read the tab until limit
-		if(!issetbitarray(tab, i)){//if not already checked
-			for(unsigned long int j = i*i; j<=list->maximum; j+=2*i){//uncheck multiples
-				//if(!issetbitarray(tab, j)){
+	
+	for(i=3; i*i<=list->maximum; i+=2){/*read the tab until limit*/
+		if(!issetbitarray(tab, i)){/*if not already checked*/
+			ulong64 j;
+			for(j = i*i; j<=list->maximum; j+=2*i){
 					setbitarray(tab,j);
-					//notPrime++;
-				//}
 			}
 		} 
 	}
 	list->cPrimes++;
-	for(unsigned long int i = 3; i<=list->maximum; i+=2){
+	
+	for(i = 3; i<=list->maximum; i+=2){
 		if(!issetbitarray(tab, i)){
 			list->cPrimes++;
 		}
 	}
-	
-	//list->cPrimes = list->maximum - notPrime;
 	toIntArray(tab, list);
 }
 
 void ShowPrimes(ListPrimes *list){
-	printf("Il y a %d nombres premiers inferieurs a %d\n", list->cPrimes, list->maximum);
-	for(int i=0; i<list->cPrimes; i++){
+	int i;
+	printf("Il y a %d nombres premiers inferieurs a %d\n", list->cPrimes, list->maximum);	for(i=0; i<list->cPrimes; i++){
 		printf("Nombre premier n%d: %d\n",i, list->pPrimes[i]);
 	}
 	Stop();
