@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
         Erathostenes(&listPrimes);
         ct2 = clock();
         printf("Duree calculs : %.2f\n", (double)(ct2 - ct1) / CLOCKS_PER_SEC);
-        ShowPrimes(&listPrimes);
+        /*ShowPrimes(&listPrimes);*/
         DestroyTListPrimes(&listPrimes);
     } while(!Stop());
     return EXIT_SUCCESS;
@@ -79,27 +79,19 @@ void toIntArray(uint32* tab, ListPrimes *list){
 	list->pPrimes = result;
 }
 
-void fillArrayWith(uint32 *tab, int size, int value){
-	int i;
-	for(i = 0; i<size; i++){
-		tab[i]=value;
-	}
-}
-
 void Erathostenes(ListPrimes *list){
-	ulong64 i;
-	long nbInt = (list->maximum-1)/(sizeof(uint32)*8)+1;
+	ulong64 i; /*Has to be bigger than int because i*i > max(int32)*/
+	int nbInt = (list->maximum-1)/(sizeof(uint32)*8)+1; /*allocate the number of int/(32 bits) to store the user's value*/
 	uint32 *tab = calloc(nbInt, sizeof(uint32));
 	/*if prime -> 0, if not -> 1*/
 	setbitarray(tab, 0); 
 	setbitarray(tab, 1);
 	
-	for(i=3; i*i<=list->maximum; i+=2){/*read the tab until limit*/
-		if(!issetbitarray(tab, i)){/*if not already checked*/
+	for(i=3; i*i<=list->maximum; i+=2){/*read the tab until limit, skip even number*/
+		if(!issetbitarray(tab, i)){/*if not already to 1 (so it's a prime)*/
 			ulong64 j;
-			for(j = i*i; j<=list->maximum; j+=2*i){
-					setbitarray(tab,j);
-			}
+			for(j = i*i; j<=list->maximum; j+=2*i)/*start at i*i because all before that are already checked*/
+				setbitarray(tab,j);  
 		} 
 	}
 	list->cPrimes++;
