@@ -103,6 +103,7 @@ void Erathostenes(ListPrimes *list){
 	/*numberOfPrime = maximum - evenNumbers - notPrimes*/
 	list->cPrimes = list->maximum - (list->maximum/2 + notPrimeCount); 
 	toIntArray(tab, list);
+	free(tab);
 }
 
 void ShowPrimes(ListPrimes *list){
