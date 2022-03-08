@@ -19,7 +19,6 @@ typedef unsigned char bool;
 #define true 1
 
 #define MAX 2147483647       /* (2^31-1) */
-#define MAX_UINT32 4294967295      
 
 typedef struct TListPrimes {
     int maximum;
@@ -49,7 +48,6 @@ int main(int argc, char* argv[]) {
 }
 
 typedef unsigned int uint32;
-typedef unsigned long int ulong64;
 #define setbitarray(pba, i) (pba[i >> 5] |= (0x00000001 << (i & 0x0000001F)))
 #define unsetbitarray(pba, i) (pba[i >> 5] &= ~(0x00000001 << (i & 0x0000001F)))
 #define issetbitarray(pba, i) (pba[i >> 5] & (0x00000001 << (i & 0x0000001F)))
@@ -80,7 +78,7 @@ void toIntArray(uint32* tab, ListPrimes *list){
 }
 
 void Erathostenes(ListPrimes *list){
-	ulong64 i; /*Has to be bigger than int because i*i > max(int32)*/
+	unsigned int i; /*Has to be bigger than int because i*i > max(int32)*/
 	uint32 notPrimeCount = 0;
 	int nbInt = (list->maximum-1)/(sizeof(uint32)*8)+1; /*allocate the number of int/(32 bits) to store the user's value*/
 	uint32 *tab = calloc(nbInt, sizeof(uint32));
@@ -89,7 +87,7 @@ void Erathostenes(ListPrimes *list){
 	setbitarray(tab, 1);
 	for(i=3; i*i<=list->maximum; i+=2){/*read the tab until limit, skip even number*/
 		if(!issetbitarray(tab, i)){/*if not already to 1 (so it's a prime)*/
-			ulong64 j;
+			unsigned int j;
 			for(j = i*i; j<=list->maximum; j+=2*i){/*start at i*i because all before that are already checked*/
 				if(!issetbitarray(tab, j)){/*don't change twice the same number*/
 					setbitarray(tab,j);  
@@ -108,8 +106,21 @@ void Erathostenes(ListPrimes *list){
 
 void ShowPrimes(ListPrimes *list){
 	int i;
-	printf("Il y a %d nombres premiers inferieurs a %d\n", list->cPrimes, list->maximum);	for(i=0; i<list->cPrimes; i++){
-		printf("Nombre premier n%6d: %12d\n",i+1, list->pPrimes[i]);
+	printf("Il y a %d nombres premiers inferieurs a %d\n", list->cPrimes, list->maximum);
+	if(list->cPrimes < 20){		for(i=0; i<list->cPrimes; i++){
+			printf("Nombre premier n%6d: %12d\n",i+1, list->pPrimes[i]);
+		}
+	}
+	else{
+		for(i=0; i<10; i++){
+			printf("Nombre premier n%6d: %12d\n",i+1, list->pPrimes[i]);
+		}
+		
+		printf("\n ... \n\n");
+		
+		for(i=list->cPrimes-10; i<list->cPrimes; i++){
+			printf("Nombre premier n%6d: %12d\n",i+1, list->pPrimes[i]);
+		}
 	}
 	Stop();
 }
